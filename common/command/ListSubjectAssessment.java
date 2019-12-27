@@ -40,7 +40,7 @@ public class ListSubjectAssessment extends Command {
     @Override
     public String toCommandString(boolean startWith) {
         if (startWith)
-            return  "GetSubject Assessment:";
+            return "GetSubject Assessment:";
         else
             return "GetSubject Assessment:" + subjectId;
 
@@ -48,12 +48,11 @@ public class ListSubjectAssessment extends Command {
 
     @Override
     public Response exec(DatabaseUtility db) {
-        Subject subjects = Subject.getById(db, subjectId);
-        String res = subjects == null ? "" : subjects.serialize();
+        List<Subject> subjects = Subject.getById(db, subjectId);
+        Log.i("subjects size = " + subjects.size());
+        String res = Command.serialize(subjects);
         return new Response(Response.STATUS_OK, res);
     }
-
-
 
 
 }

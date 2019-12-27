@@ -9,14 +9,15 @@ import server.DatabaseUtility;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Subject implements Serializable, Tablable {
 
-    public final static String TABLE_NAME = "subjects";
-    public final static String TABLE_NAME2 = "assessments";
+    public final static String TABLE_SUBJECT = "subjects";
+    public final static String TABLE_ASSESMENT = "assessments";
 
     private int subjectId;
     private String subjectName;
@@ -29,7 +30,7 @@ public class Subject implements Serializable, Tablable {
 
     public Subject(int subjectId,
                    String subjectName, String assessmentId, String subject, String type, String topic, String format, String dueDate
-) {
+    ) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
         this.assessmentId = assessmentId;
@@ -38,18 +39,6 @@ public class Subject implements Serializable, Tablable {
         this.topic = topic;
         this.format = format;
         this.dueDate = dueDate;
-    }
-
-
-
-
-
-    public Subject(int id, String subjectName, String assessment_id, String type, String topic, String format, String dueDate) {
-
-    }
-
-    public Subject() {
-
     }
 
     public int getSubjectId() {
@@ -116,29 +105,34 @@ public class Subject implements Serializable, Tablable {
         this.dueDate = dueDate;
     }
 
-    public static Subject getById(DatabaseUtility db, int id){
+    public static List<Subject> getById(DatabaseUtility db, int id) {
         try {
-            PreparedStatement statement = db.getConnection().prepareStatement(                      //////////////TABLE_NAME = subjects
-                        "SELECT " + TABLE_NAME + ".*," + TABLE_NAME2 + ".* " +                 //////////////TABLE_NAME2 = assessments
-                            "FROM " + TABLE_NAME + "," + TABLE_NAME2 +
-                            " WHERE " + TABLE_NAME+".subjectName = " + TABLE_NAME2 + ".subject "+
-                            "AND subjects.subject_id = " + id
-                            );
+            String query;
+            PreparedStatement statement = db.getConnection().prepareStatement(query =             //////////////TABLE_NAME = subjects
+                    "SELECT * " +                 //////////////TABLE_NAME2 = assessments
+                            "FROM " + TABLE_SUBJECT + "," + TABLE_ASSESMENT + " " +
+                            "WHERE " + TABLE_SUBJECT + ".subjectName = " + TABLE_ASSESMENT + ".subject " +
+                            "AND " + TABLE_SUBJECT + ".subject_id = " + id
+            );
             Log.i("prepareStatement: " + statement);
+            Log.i("QUERY: " + query);
             ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            int subjectId = resultSet.getInt("subject_id");
-            String subjectName = resultSet.getString("subject_name");
-            String assessmentId = resultSet.getString("assessment_id");
-            String subject = resultSet.getString("subject");
-            String type = resultSet.getString("type");
-            String topic = resultSet.getString("topic");
-            String format = resultSet.getString("format");
-            String dueDate = resultSet.getString("dueDate");
-            return new Subject(subjectId, subjectName, assessmentId, subject, type, topic, format, dueDate)
-                    ;
+            List<Subject> subjects = new ArrayList<>();
+            while (resultSet.next()) {
+                int subjectId = resultSet.getInt("subject_id");
+                String subjectName = resultSet.getString("subjectName");
+                String assessmentId = resultSet.getString("assessment_id");
+                String subject = resultSet.getString("subject");
+                String type = resultSet.getString("type");
+                String topic = resultSet.getString("topic");
+                String format = resultSet.getString("format");
+                String dueDate = resultSet.getString("due_date");
+                Log.i("----->" + new Subject(subjectId, subjectName, assessmentId, subject, type, topic, format, dueDate).toString());
+                subjects.add(new Subject(subjectId, subjectName, assessmentId, subject, type, topic, format, dueDate));
+            }
+            return subjects;
         } catch (SQLException e) {
-//            e.printStackTrace()
+            e.printStackTrace();
             return null;
         }
 
@@ -147,38 +141,39 @@ public class Subject implements Serializable, Tablable {
     public boolean saveSubject(DatabaseUtility db) {
         try {
             PreparedStatement statement = db.getConnection().prepareStatement(
-                    "SELECT * FROM " + TABLE_NAME + " " +
+                    "SELECT * FROM " + TABLE_SUBJECT + " " +
                             "WHERE subjectName = ? ");
 
-            statement.setString(1,  subjectName);
+            statement.setString(1, subjectName);
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.getFetchSize() > 0) {
                 PreparedStatement updateStatement = db.getConnection().prepareStatement(
-                        "UPDATE " + TABLE_NAME + " " +
+                        "UPDATE " + TABLE_SUBJECT + " " +
                                 "SET " +
                                 "subjectName = ?"
                 );
                 updateStatement.setString(1, subjectName);
                 updateStatement.executeUpdate();
                 return true;
-            } else{
+            } else {
                 PreparedStatement insertStatement = db.getConnection().prepareStatement(
-                    "INSERT INTO " + TABLE_NAME + " (subjectName)" +
-                            " VALUES (?)" );
+                        "INSERT INTO " + TABLE_SUBJECT + " (subjectName)" +
+                                " VALUES (?)");
                 insertStatement.setString(1, "English");
                 insertStatement.execute();
-                insertStatement.setString (1, "Maths B");
+                insertStatement.setString(1, "Maths B");
                 insertStatement.execute();
-                insertStatement.setString (1, "Biology");
+                insertStatement.setString(1, "Biology");
                 insertStatement.execute();
-                insertStatement.setString (1, "Business and Communication Technologies");
+                insertStatement.setString(1, "Business and Communication Technologies");
                 insertStatement.execute();
-                insertStatement.setString (1, "Religion and Ethics");
+                insertStatement.setString(1, "Religion and Ethics");
                 insertStatement.execute();
 
-            return true;}
-       } catch (SQLException e) {
+                return true;
+            }
+        } catch (SQLException e) {
             //e.printStackTrace();
             return false;
         }
@@ -197,9 +192,11 @@ public class Subject implements Serializable, Tablable {
         data.put("due_date", dueDate);
         return JsonHelper.toJson(data);
     }
+
     public static String[] getHeaders() {
         return new String[]{"Subject Id", "Subject Name", "Assessment Id", "Type", "Topic", "Format", "Due Date"};
     }
+
     @Override
     public void deserialize(String serializer) {
         Map<String, Object> data = JsonHelper.flatten(serializer);
@@ -215,16 +212,17 @@ public class Subject implements Serializable, Tablable {
     @Override
     public String[] toTable() {
         return new String[]{
-                    getSubjectId() + "",
-                    getSubjectName(),
-                    getAssessmentId() + "",
-                    getType(),
-                    getTopic(),
-                    getFormat(),
-                    getDueDate()
+                getSubjectId() + "",
+                getSubjectName(),
+                getAssessmentId() + "",
+                getType(),
+                getTopic(),
+                getFormat(),
+                getDueDate()
         };
 
     }
+
     @Override
     public String toString() {
         return "Subject{" +

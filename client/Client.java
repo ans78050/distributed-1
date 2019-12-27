@@ -64,7 +64,7 @@ public class Client {
             Command command = null;
             Request request;
             Response response;
- ////////////// command 1 List Of Assessment For Chosen Subject /////////////////////////////////
+            ////////////// command 1 List Of Assessment For Chosen Subject /////////////////////////////////
             if (commandNumber == 1) {
                 ListSubjectAssessment s = new ListSubjectAssessment();
                 System.out.println("=======================================");
@@ -187,31 +187,44 @@ public class Client {
     ////////////////////handle of command ///////////////////////////////////////////////////////////////////
     //////////////command 1///////////////////
     private static void handleListSubject(Response response) {
-        List<Subject> subjects = new ArrayList();
+        List<SubjectAssessment> subjects = new ArrayList<>();
         System.out.println("=======================================");
-        System.out.println("Response: Success!");
+        System.out.println("Response: Success! list subject");
         System.out.println("Result:");
         for (String line : response.getBody().split("\n")) {
             if (line.trim().isEmpty()) continue;
             Map<String, Object> data = JsonHelper.flatten(line);
-            Subject s  = new Subject(
+            Log.i("data --> " + data);
+            SubjectAssessment s = new SubjectAssessment(
                     (int) data.get("subject_id"),
-                    (String) data.get("subjectName"),
+                    (String) data.get("subject_name"),
                     (String) data.get("assessment_id"),
                     (String) data.get("type"),
                     (String) data.get("topic"),
                     (String) data.get("format"),
-                    (String) data.get("dueDate")
+                    (String) data.get("due_date")
             );
             subjects.add(s);
 
         }
 
+
         String[] headers = Subject.getHeaders();
         String[][] content = Tablable.of(subjects, headers.length);
+
+        for (String ss : headers) {
+            Log.i(ss);
+        }
+        for (String[] cc : content) {
+            for (String ccc : cc) {
+                Log.i(ccc + ", ");
+            }
+        }
+
         System.out.println(Table.of(headers, content));
     }
-/////////////////command 2//////////////////
+
+    /////////////////command 2//////////////////
     private static void handleStudentGradeAssessment(Response response) {
         List<GradeAssessment> students = new ArrayList<>();
         System.out.println("=======================================");
@@ -226,13 +239,14 @@ public class Client {
                     (String) data.get("assessment_id"), //from assessment class
                     (int) data.get("grade_id")    //from grade class
             );
-students.add(a);
+            students.add(a);
         }
         String[] headers = GradeAssessment.getHeaders();
         String[][] content = Tablable.of(students, headers.length);
         System.out.println(Table.of(headers, content));
     }
-///////////command 4////////////////////
+
+    ///////////command 4////////////////////
     private static void handleListAssessmentDetail(Response response) {
         List<Assessment> assessment = new ArrayList<>();
         System.out.println("=======================================");

@@ -156,8 +156,8 @@ public class DatabaseUtility {
     }
 
     public void importDataSubject() {
-        Subject subject  = new Subject();
-        subject.saveSubject(this);
+//        Subject subject  = new Subject();
+//        subject.saveSubject(this);
     }
 
 

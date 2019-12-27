@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class GetStudentCommand extends Command {
+public class GetStudentGradeCommand extends Command {
 
     private int studentId;
     private int subjectId;
@@ -57,9 +57,9 @@ public class GetStudentCommand extends Command {
     @Override
     public String toCommandString(boolean startWith) {
         if (startWith)
-            return "GetStudent:";
+            return "GetStudentGrade:";
         else
-            return "GetStudent:" + studentId+
+            return "GetStudentGrade:" + studentId+
                     ":" + subjectId+
                     ":" + assessmentId+
                     ":" + gradeId ;

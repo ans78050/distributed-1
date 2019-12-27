@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class Server {
 
-    private static final boolean DO_IMPORT_DATA_FROM_FILE = true;
+    private static final boolean DO_IMPORT_DATA_FROM_FILE = false;
 
     public final static int PORT = 8080;
 

@@ -80,7 +80,7 @@ public class Client {
             } else
 ///////// command 2 Grade Of Assessment For A Student/////////////////////////////////////////////
                 if (commandNumber == 2) {
-                    GetStudentCommand c = new GetStudentCommand();
+                    GetStudentGradeCommand c = new GetStudentGradeCommand();
                     System.out.println("=======================================");
                     System.out.println("1. John Clarke");
                     System.out.println("2. Peter White");

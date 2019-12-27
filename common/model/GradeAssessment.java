@@ -1,6 +1,7 @@
 package common.model;
 
 import common.JsonHelper;
+import common.Log;
 import common.Serializable;
 import common.Tablable;
 import server.DatabaseUtility;
@@ -46,9 +47,11 @@ public class GradeAssessment implements Serializable, Tablable {
 //        }
 //        return (GradeAssessment) gradeAssessment;
 //    }
-    public static GradeAssessment getByIdGrade(DatabaseUtility db, int id, int id2) {
+    public static GradeAssessment getByIdGrade(DatabaseUtility db, int student_id, int subject_id) {
         try {
-            PreparedStatement statement = db.getConnection().prepareStatement("SELECT * FROM " + TABLE_NAME + " WHERE student_id = " + id + "AND subject_id = " + id2);
+            String sql;
+            PreparedStatement statement = db.getConnection().prepareStatement(sql = "SELECT * FROM " + TABLE_NAME + " WHERE student_id = " + student_id + " AND subject_id = " + subject_id);
+            Log.i("QUERY --> " + sql);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
             int studentId = resultSet.getInt("student_id");
@@ -57,6 +60,7 @@ public class GradeAssessment implements Serializable, Tablable {
             int gradeId = resultSet.getInt("grade_id");
             return new GradeAssessment(studentId, subjectId, assessmentId, gradeId);
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }

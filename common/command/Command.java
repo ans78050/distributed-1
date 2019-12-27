@@ -1,5 +1,6 @@
 package common.command;
 
+import common.Log;
 import common.Serializable;
 import protocol.Response;
 import server.DatabaseUtility;
@@ -19,7 +20,7 @@ public abstract class Command {
         Command[] commands = {
 
                 new ListSubjectAssessment(),
-                new GetStudentCommand(),
+                new GetStudentGradeCommand(),
                 new ListAssessmentDetailCommand(),
                 new SetGradeCommand()
 
@@ -30,6 +31,7 @@ public abstract class Command {
                 return command;
             }
         }
+        Log.i("-----------------------------------------");
         return null;
     }
 

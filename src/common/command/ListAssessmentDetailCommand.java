@@ -9,6 +9,12 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import java.util.List;
 
 public class ListAssessmentDetailCommand extends Command {
+
+    @Override
+    public int authorizationLevel() {
+        return Command.AUTHORIZATION_LEVEL_NORMAL;
+    }
+
     @Override
     public void setCommandString(String command) {
 

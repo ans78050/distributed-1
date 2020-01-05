@@ -4,6 +4,7 @@ public class Response {
 
     public final static int STATUS_OK = 200;
     public final static int STATUS_PAGE_NOT_FOUND = 404;
+    public final static int STATUS_AUTHENTICATION_FAIL = 401;
     public final static int STATUS_SERVER_ERROR = 500;
 
     private int status;

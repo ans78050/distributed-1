@@ -149,6 +149,8 @@ public class Client {
 
             request = new Request("localhost", Server.PORT, command.toCommandString(false));
 
+            request.setUser(1, "admin");
+
             try {
                 Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());
                 response = client.request(request);

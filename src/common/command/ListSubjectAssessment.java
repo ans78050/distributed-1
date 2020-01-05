@@ -9,6 +9,11 @@ import java.util.List;
 
 public class ListSubjectAssessment extends Command {
 
+    @Override
+    public int authorizationLevel() {
+        return Command.AUTHORIZATION_LEVEL_NORMAL;
+    }
+
     private int subjectId;
 
     public ListSubjectAssessment(int subjectId) {

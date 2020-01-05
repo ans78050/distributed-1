@@ -12,6 +12,11 @@ import java.util.Optional;
 
 public class GetStudentGradeCommand extends Command {
 
+    @Override
+    public int authorizationLevel() {
+        return Command.AUTHORIZATION_LEVEL_NORMAL;
+    }
+
     private int studentId;
     private int subjectId;
     private String assessmentId;
@@ -29,14 +34,19 @@ public class GetStudentGradeCommand extends Command {
     public int getStudentId() {
         return studentId;
     }
+
     public void setStudentId(int studentId) {
         this.studentId = studentId;
     }
 
-    public void setSubjectId(int subjectId){this.subjectId = subjectId;}
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
+    }
+
     public int getSubjectId() {
         return subjectId;
     }
+
     public void setAssessmentId(String assessmentId) {
         this.assessmentId = assessmentId;
     }
@@ -44,7 +54,8 @@ public class GetStudentGradeCommand extends Command {
     public String getAssessmentId() {
         return assessmentId;
     }
-//////////////////////////////////////////////////////////////////////////
+
+    //////////////////////////////////////////////////////////////////////////
     @Override
     public void setCommandString(String command) {
         String[] s = command.split(":");
@@ -59,13 +70,13 @@ public class GetStudentGradeCommand extends Command {
         if (startWith)
             return "GetStudentGrade:";
         else
-            return "GetStudentGrade:" + studentId+
-                    ":" + subjectId+
-                    ":" + assessmentId+
-                    ":" + gradeId ;
+            return "GetStudentGrade:" + studentId +
+                    ":" + subjectId +
+                    ":" + assessmentId +
+                    ":" + gradeId;
     }
 
-//    @Override
+    //    @Override
 //    public Response exec(DatabaseUtility db) {
 //        List<GradeAssessment> gradeAssessments = GradeAssessment.getByIdGrade(db, studentId, subjectId);
 //        if (gradeAssessments == null){
@@ -73,14 +84,12 @@ public class GetStudentGradeCommand extends Command {
 //        String res = Command.serialize(gradeAssessments);
 //        return new Response(Response.STATUS_OK, res);
 //    }
-@Override
-public Response exec(DatabaseUtility db) {
-    GradeAssessment gradeAssessment = GradeAssessment.getByIdGrade(db, studentId, subjectId);
-    String res = gradeAssessment == null ? "" : gradeAssessment.serialize();
-    return new Response(Response.STATUS_OK, res);
-}
-
-
+    @Override
+    public Response exec(DatabaseUtility db) {
+        GradeAssessment gradeAssessment = GradeAssessment.getByIdGrade(db, studentId, subjectId);
+        String res = gradeAssessment == null ? "" : gradeAssessment.serialize();
+        return new Response(Response.STATUS_OK, res);
+    }
 
 
 }

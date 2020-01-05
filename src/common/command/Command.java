@@ -10,11 +10,16 @@ import java.util.stream.Collectors;
 
 public abstract class Command {
 
+    public static final int AUTHORIZATION_LEVEL_NORMAL = 0;
+    public static final int AUTHORIZATION_LEVEL_ADMIN = 1;
+
     public abstract void setCommandString(String command);
 
     public abstract String toCommandString(boolean startWith);
 
     public abstract Response exec(DatabaseUtility db);
+
+    public abstract int authorizationLevel();
 
     public static Command fromCommandString(String commandString) {
         Command[] commands = {

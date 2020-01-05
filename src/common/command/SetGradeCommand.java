@@ -6,6 +6,11 @@ import server.DatabaseUtility;
 
 public class SetGradeCommand extends Command {
 
+    @Override
+    public int authorizationLevel() {
+        return Command.AUTHORIZATION_LEVEL_ADMIN;
+    }
+
     private int studentId, subjectId, gradeId;
     private String assessmentId;
 
@@ -55,12 +60,12 @@ public class SetGradeCommand extends Command {
         if (startWith)
             return "SetGrade:";
         else
-            return "SetGrade:" + studentId + ":" +   subjectId + ":" + assessmentId + ":" + gradeId;
+            return "SetGrade:" + studentId + ":" + subjectId + ":" + assessmentId + ":" + gradeId;
     }
 
     @Override
     public Response exec(DatabaseUtility db) {
-        GradeAssessment g = new GradeAssessment(studentId, subjectId, assessmentId,  gradeId);
+        GradeAssessment g = new GradeAssessment(studentId, subjectId, assessmentId, gradeId);
         g.save(db);
         return new Response(Response.STATUS_OK, "ok");
     }

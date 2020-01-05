@@ -5,6 +5,13 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
+        String s = "abc/def";
+        String[] s2 = s.split("/");
+        System.out.println(s2[0]);
+        System.out.println(s2[1]);
+    }
+
+    public static void main2(String[] args) {
         int[] num1 = {1, 2};
         int[] num2 = {3, 4};
         double answer = findMedianSortedArrays(num1, num2);

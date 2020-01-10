@@ -27,7 +27,8 @@ public abstract class Command {
                 new ListSubjectAssessment(),
                 new GetStudentGradeCommand(),
                 new ListAssessmentDetailCommand(),
-                new SetGradeCommand()
+                new SetGradeCommand(),
+                new LoginCommand()
 
         };
         for (Command command : commands) {

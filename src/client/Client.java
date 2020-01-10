@@ -45,17 +45,54 @@ public class Client {
         Client client = new Client();
         Scanner scanner = new Scanner(System.in);
 
+        Users currentUser = null;
+
+        while (currentUser == null) {
+            System.out.println("System need Login");
+            System.out.print("username: ");
+            String username = scanner.nextLine();
+            System.out.print("password: ");
+            String password = scanner.nextLine();
+
+            try {
+
+                Command cmd = new LoginCommand(username, password);
+                Request request = new Request("localhost", Server.PORT, cmd.toCommandString(false));
+                Response response = client.request(request);
+                if (response.getStatus() == Response.STATUS_PAGE_NOT_FOUND) {
+                    System.out.print("Username or Password is Incorrect!! please try again\n\n");
+                    continue;
+                }
+
+                currentUser = new Users();
+                currentUser.deserialize(response.getBody());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         while (true) {
             System.out.println("=======================================");
+            System.out.println(">>> " + currentUser.getUsername() + " (" + currentUser.getId() + "/" + currentUser.getType() + ")");
             System.out.println("1. List Of Assessment For Chosen Subject");
             System.out.println("2. Grade Of Assessment For Student");
             System.out.println("3. Set Grade For A Chosen Student And Subject");
             System.out.println("4. List All Assessment Detail");
-            System.out.println("0. Exit");
+            System.out.println("or type 'logout' to logout.");
             System.out.print("Enter Command Number: ");
 
-            int commandNumber = scanner.nextInt();
-            if (commandNumber == 0) break;
+            String s = scanner.nextLine();
+            if (s.equals("logout")) {
+                break;
+            }
+            int commandNumber;
+            try {
+                commandNumber = Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Unknown Command, Please select enter command number only!");
+                continue;
+            }
             if (commandNumber < 0 || commandNumber > 4) {
                 System.out.println("Unknown Command, Please try again!");
                 continue;
@@ -149,7 +186,7 @@ public class Client {
 
             request = new Request("localhost", Server.PORT, command.toCommandString(false));
 
-            request.setUser(1, "admin");
+            request.setUser(currentUser.getId(), currentUser.getType());
 
             try {
                 Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());

@@ -51,4 +51,19 @@ public class LoginCommand extends Command {
     public int authorizationLevel() {
         return AUTHORIZATION_LEVEL_NORMAL;
     }
+
+    @Override
+    public boolean showInUi(Users users) {
+        return false;
+    }
+
+    @Override
+    public String getCommandStringUi() {
+        return null;
+    }
+
+    @Override
+    public void doInputUi() {
+
+    }
 }

@@ -47,177 +47,123 @@ public class Client {
 
         Users currentUser = null;
 
-        while (currentUser == null) {
-            System.out.println("System need Login");
-            System.out.print("username: ");
-            String username = scanner.nextLine();
-            System.out.print("password: ");
-            String password = scanner.nextLine();
+        while (true) {
 
-            try {
+            while (currentUser == null) {
+                System.out.println("System need Login, or leave blank to exit");
+                System.out.print("username: ");
+                String username = scanner.nextLine();
+                if (username.isEmpty()) {
+                    System.out.println("exit --> bye!");
+                    break;
+                }
 
-                Command cmd = new LoginCommand(username, password);
-                Request request = new Request("localhost", Server.PORT, cmd.toCommandString(false));
-                Response response = client.request(request);
-                if (response.getStatus() == Response.STATUS_PAGE_NOT_FOUND) {
-                    System.out.print("Username or Password is Incorrect!! please try again\n\n");
+                System.out.print("password: ");
+                String password = scanner.nextLine();
+
+                try {
+
+                    Command cmd = new LoginCommand(username, password);
+                    Request request = new Request("localhost", Server.PORT, cmd.toCommandString(false));
+                    Response response = client.request(request);
+                    if (response.getStatus() == Response.STATUS_PAGE_NOT_FOUND) {
+                        System.out.print("Username or Password is Incorrect!! please try again\n\n");
+                        continue;
+                    }
+
+                    currentUser = new Users();
+                    currentUser.deserialize(response.getBody());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (currentUser == null) {
+                break;
+            }
+
+            while (true) {
+                System.out.println("=======================================");
+                System.out.println(">>> " + currentUser.getUsername() + " (" + currentUser.getId() + "/" + currentUser.getType() + ")");
+                int i = 1;
+                for (Command c : Command.list()) {
+                    if (c.showInUi(currentUser)) {
+                        System.out.println(i + ". " + c.getCommandStringUi());
+                        i++;
+                    }
+                }
+                System.out.println("or type 'logout' to logout.");
+                System.out.print("Enter Command Number: ");
+
+                String tmpCmd = scanner.nextLine();
+                if (tmpCmd.equals("logout")) {
+                    currentUser = null;
+                    break;
+                }
+                int commandNumber;
+                try {
+                    commandNumber = Integer.parseInt(tmpCmd);
+                } catch (NumberFormatException e) {
+                    System.out.println("Unknown Command, Please select enter command number only!");
+                    continue;
+                }
+                if (commandNumber < 1 || commandNumber > Command.commandInUiCount()) {
+                    System.out.println("Unknown Command, Please try again!");
                     continue;
                 }
 
-                currentUser = new Users();
-                currentUser.deserialize(response.getBody());
+                Command command = null;
+                Request request;
+                Response response;
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        while (true) {
-            System.out.println("=======================================");
-            System.out.println(">>> " + currentUser.getUsername() + " (" + currentUser.getId() + "/" + currentUser.getType() + ")");
-            System.out.println("1. List Of Assessment For Chosen Subject");
-            System.out.println("2. Grade Of Assessment For Student");
-            System.out.println("3. Set Grade For A Chosen Student And Subject");
-            System.out.println("4. List All Assessment Detail");
-            System.out.println("or type 'logout' to logout.");
-            System.out.print("Enter Command Number: ");
-
-            String tmpCmd = scanner.nextLine();
-            if (tmpCmd.equals("logout")) {
-                break;
-            }
-            int commandNumber;
-            try {
-                commandNumber = Integer.parseInt(tmpCmd);
-            } catch (NumberFormatException e) {
-                System.out.println("Unknown Command, Please select enter command number only!");
-                continue;
-            }
-            if (commandNumber < 0 || commandNumber > 4) {
-                System.out.println("Unknown Command, Please try again!");
-                continue;
-            }
-
-            Command command = null;
-            Request request;
-            Response response;
-            ////////////// command 1 List Of Assessment For Chosen Subject /////////////////////////////////
-            if (commandNumber == 1) {
-                ListSubjectAssessment s = new ListSubjectAssessment();
-                System.out.println("=======================================");
-                System.out.println("1. English");
-                System.out.println("2. Mathematics B");
-                System.out.println("3. Biology");
-                System.out.println("4. Business and Communication Technologies");
-                System.out.println("5. Religion and Ethics");
-                System.out.println("=======================================");
-                System.out.print("Enter Subject Id: ");
-                s.setSubjectId(scanner.nextInt());
-                command = s;
-            } else
-///////// command 2 Grade Of Assessment For A Student/////////////////////////////////////////////
-                if (commandNumber == 2) {
-                    GetStudentGradeCommand c = new GetStudentGradeCommand();
-                    System.out.println("=======================================");
-                    System.out.println("1. John Clarke");
-                    System.out.println("2. Peter White");
-                    System.out.println("3. Lily Li");
-                    System.out.println("4. Lisa Soon");
-                    System.out.println("5. Tom Dixon");
-                    System.out.println("=======================================");
-                    System.out.print("Enter Student Id: ");
-                    c.setStudentId(scanner.nextInt());
-                    scanner.nextLine();
-                    System.out.println("=======================================");
-                    System.out.println("1. English");
-                    System.out.println("2. Mathematics B");
-                    System.out.println("3. Biology");
-                    System.out.println("4. Business and Communication Technologies");
-                    System.out.println("5. Religion and Ethics");
-                    System.out.println("=======================================");
-                    System.out.print("Enter Subject Id: ");
-                    c.setSubjectId(Integer.parseInt(scanner.nextLine()));
-                    command = c;
-                } else
-//////////// command 3 Set Grade For A Chosen Student And Subject/////////////////////////////////
-                    if (commandNumber == 3) {
-                        SetGradeCommand c = new SetGradeCommand();
-                        System.out.println("=======================================");
-                        System.out.println("1. John Clarke");
-                        System.out.println("2. Peter White");
-                        System.out.println("3. Lily Li");
-                        System.out.println("4. Lisa Soon");
-                        System.out.println("5. Tom Dixon");
-                        System.out.println("=======================================");
-                        System.out.print("Enter Student Id: ");
-                        c.setStudentId(scanner.nextInt());
-                        scanner.nextLine();
-                        System.out.println("=======================================");
-                        System.out.println("1. English");
-                        System.out.println("2. Mathematics B");
-                        System.out.println("3. Biology");
-                        System.out.println("4. Business and Communication Technologies");
-                        System.out.println("5. Religion and Ethics");
-                        System.out.println("=======================================");
-                        System.out.print("Enter Subject Id: ");
-                        c.setSubjectId(scanner.nextInt());
-                        scanner.nextLine();
-                        System.out.print("Enter Assessment Id(eg 11.1): ");
-                        c.setAssessmentId(scanner.next());
-                        scanner.nextLine();
-                        System.out.println("=======================================");
-                        System.out.println("1. Very high");
-                        System.out.println("2. High");
-                        System.out.println("3. Sound");
-                        System.out.println("4. Developing");
-                        System.out.println("5. Basic understanding");
-                        System.out.println("=======================================");
-                        System.out.print("Enter Grade Id: ");
-                        c.setGradeId(scanner.nextInt());
+                i = 1;
+                for (Command c : Command.list()) {
+                    if (i == commandNumber) {
+                        c.doInputUi();
                         command = c;
-                    } else
-/////////////command 4 List All Assessment Detail/////////////////////////////////////////////////
-                        if (commandNumber == 4) {
-                            command = new ListAssessmentDetailCommand();
-                        } else {
-
-                        }
-
-
-            request = new Request("localhost", Server.PORT, command.toCommandString(false));
-
-            request.setUser(currentUser.getId(), currentUser.getType());
-
-            try {
-                Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());
-                response = client.request(request);
-                Log.i("status: " + response.getStatus());
-                Log.i("body: " + response.getBody());
-
-                if (response.getStatus() == Response.STATUS_OK) {
-                    switch (commandNumber) {
-                        case 1:
-                            handleListSubject(response);        ///////handle command assessment by subject
-                            break;
-                        case 2:
-                            handleStudentGradeAssessment(response);  //////handle command student grade by subject
-                            break;
-
-                        case 4:
-                            handleListAssessmentDetail(response); ////handle show assessment table
-                            break;
+                        break;
                     }
-                } else {
-                    System.out.println("=======================================");
-                    System.out.println("Response: Failure!");
-                    System.out.println("Error Code: " + response.getStatus());
-                    System.out.println(response.getBody());
-                    System.out.println("=======================================");
-                    System.out.println();
+                    if (c.showInUi(currentUser)) {
+                        i++;
+                    }
                 }
 
-            } catch (IOException e) {
-                e.printStackTrace();
+                request = new Request("localhost", Server.PORT, command.toCommandString(false));
+
+                request.setUser(currentUser.getId(), currentUser.getType());
+
+                try {
+                    Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());
+                    response = client.request(request);
+                    Log.i("status: " + response.getStatus());
+                    Log.i("body: " + response.getBody());
+
+                    if (response.getStatus() == Response.STATUS_OK) {
+                        switch (commandNumber) {
+                            case 1:
+                                handleListSubject(response);        ///////handle command assessment by subject
+                                break;
+                            case 2:
+                                handleStudentGradeAssessment(response);  //////handle command student grade by subject
+                                break;
+
+                            case 4:
+                                handleListAssessmentDetail(response); ////handle show assessment table
+                                break;
+                        }
+                    } else {
+                        System.out.println("=======================================");
+                        System.out.println("Response: Failure!");
+                        System.out.println("Error Code: " + response.getStatus());
+                        System.out.println(response.getBody());
+                        System.out.println("=======================================");
+                        System.out.println();
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

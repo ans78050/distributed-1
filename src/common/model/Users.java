@@ -42,6 +42,10 @@ public class Users implements Serializable, Tablable {
         return type;
     }
 
+    public boolean isAdmin() {
+        return getType().equals("admin");
+    }
+
     public String getUsername() {
         return username;
     }

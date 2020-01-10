@@ -34,4 +34,14 @@ public class ListAssessmentDetailCommand extends Command {
         String res = Command.serialize(assessment);
         return new Response(Response.STATUS_OK, res);
     }
+
+    @Override
+    public String getCommandStringUi() {
+        return "List All Assessment Detail";
+    }
+
+    @Override
+    public void doInputUi() {
+
+    }
 }

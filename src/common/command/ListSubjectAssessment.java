@@ -6,6 +6,7 @@ import protocol.Response;
 import server.DatabaseUtility;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class ListSubjectAssessment extends Command {
 
@@ -57,6 +58,26 @@ public class ListSubjectAssessment extends Command {
         Log.i("subjects size = " + subjects.size());
         String res = Command.serialize(subjects);
         return new Response(Response.STATUS_OK, res);
+    }
+
+
+    @Override
+    public String getCommandStringUi() {
+        return "List Of Assessment For Chosen Subject";
+    }
+
+    @Override
+    public void doInputUi() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=======================================");
+        System.out.println("1. English");
+        System.out.println("2. Mathematics B");
+        System.out.println("3. Biology");
+        System.out.println("4. Business and Communication Technologies");
+        System.out.println("5. Religion and Ethics");
+        System.out.println("=======================================");
+        System.out.print("Enter Subject Id: ");
+        setSubjectId(scanner.nextInt());
     }
 
 

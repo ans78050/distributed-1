@@ -4,6 +4,8 @@ import common.model.GradeAssessment;
 import protocol.Response;
 import server.DatabaseUtility;
 
+import java.util.Scanner;
+
 public class SetGradeCommand extends Command {
 
     @Override
@@ -70,6 +72,48 @@ public class SetGradeCommand extends Command {
         return new Response(Response.STATUS_OK, "ok");
     }
 
+
+    @Override
+    public String getCommandStringUi() {
+        return "Set Grade For A Chosen Student And Subject";
+    }
+
+    @Override
+    public void doInputUi() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=======================================");
+        System.out.println("1. John Clarke");
+        System.out.println("2. Peter White");
+        System.out.println("3. Lily Li");
+        System.out.println("4. Lisa Soon");
+        System.out.println("5. Tom Dixon");
+        System.out.println("=======================================");
+        System.out.print("Enter Student Id: ");
+        setStudentId(scanner.nextInt());
+        scanner.nextLine();
+        System.out.println("=======================================");
+        System.out.println("1. English");
+        System.out.println("2. Mathematics B");
+        System.out.println("3. Biology");
+        System.out.println("4. Business and Communication Technologies");
+        System.out.println("5. Religion and Ethics");
+        System.out.println("=======================================");
+        System.out.print("Enter Subject Id: ");
+        setSubjectId(scanner.nextInt());
+        scanner.nextLine();
+        System.out.print("Enter Assessment Id(eg 11.1): ");
+        setAssessmentId(scanner.next());
+        scanner.nextLine();
+        System.out.println("=======================================");
+        System.out.println("1. Very high");
+        System.out.println("2. High");
+        System.out.println("3. Sound");
+        System.out.println("4. Developing");
+        System.out.println("5. Basic understanding");
+        System.out.println("=======================================");
+        System.out.print("Enter Grade Id: ");
+        setGradeId(scanner.nextInt());
+    }
 }
 
 

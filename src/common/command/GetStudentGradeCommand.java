@@ -9,6 +9,7 @@ import server.DatabaseUtility;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class GetStudentGradeCommand extends Command {
 
@@ -89,6 +90,36 @@ public class GetStudentGradeCommand extends Command {
         GradeAssessment gradeAssessment = GradeAssessment.getByIdGrade(db, studentId, subjectId);
         String res = gradeAssessment == null ? "" : gradeAssessment.serialize();
         return new Response(Response.STATUS_OK, res);
+    }
+
+
+    @Override
+    public String getCommandStringUi() {
+        return "Grade Of Assessment For Student";
+    }
+
+    @Override
+    public void doInputUi() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("=======================================");
+        System.out.println("1. John Clarke");
+        System.out.println("2. Peter White");
+        System.out.println("3. Lily Li");
+        System.out.println("4. Lisa Soon");
+        System.out.println("5. Tom Dixon");
+        System.out.println("=======================================");
+        System.out.print("Enter Student Id: ");
+        setStudentId(scanner.nextInt());
+        scanner.nextLine();
+        System.out.println("=======================================");
+        System.out.println("1. English");
+        System.out.println("2. Mathematics B");
+        System.out.println("3. Biology");
+        System.out.println("4. Business and Communication Technologies");
+        System.out.println("5. Religion and Ethics");
+        System.out.println("=======================================");
+        System.out.print("Enter Subject Id: ");
+        setSubjectId(Integer.parseInt(scanner.nextLine()));
     }
 
 

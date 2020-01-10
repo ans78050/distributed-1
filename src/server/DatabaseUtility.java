@@ -120,19 +120,9 @@ public class DatabaseUtility {
         return "CREATE TABLE grade_assessment(" +
                 "student_id integer," +
                 "subject_id integer," +
-                "assessment_id varchar(64)," +
+                "assessment_id varchar(64),"+
                 "grade_id integer," +
                 "PRIMARY KEY( `assessment_id`, `subject_id`, `grade_id`, `student_id`)" +
-                ")";
-    }
-
-    private String createUsersTableSQL() {
-        return "CREATE TABLE users(" +
-                "id integer," +
-                "type varchar(8)," +
-                "username varchar(32)," +
-                "password varchar(32)," +
-                "PRIMARY KEY( `id`, `type`)" +
                 ")";
     }
 
@@ -142,8 +132,7 @@ public class DatabaseUtility {
                 createAssessmentTableSQL(),
                 createGradeTableSQL(),
                 createSubjectTableSQL(),
-                createGradeAssessmentTableSQL(),
-                createUsersTableSQL()
+                createGradeAssessmentTableSQL()
         };
 
         for (String createTableStatement : createTableStatements) {
@@ -162,7 +151,7 @@ public class DatabaseUtility {
     }
 
     public void importDataGrade() throws SQLException {
-        Grade grade = new Grade();
+        Grade grade  = new Grade();
         grade.saveGrade(this);
     }
 
@@ -170,6 +159,8 @@ public class DatabaseUtility {
 //        Subject subject  = new Subject();
 //        subject.saveSubject(this);
     }
+
+
 
 
     public void importDataFromFile() {                //import data from file
@@ -181,6 +172,7 @@ public class DatabaseUtility {
                 Log.i("saving assessment: " + assessment);
                 assessment.save(this);
             }
+
 
 
         } catch (FileNotFoundException e) {

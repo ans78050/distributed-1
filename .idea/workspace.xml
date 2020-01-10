@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="261742d6-9d83-4ff9-835e-247648739efa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/common/command/LoginCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/model/Users.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/project2/client/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/project2/client/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/project2/protocol/Request.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/project2/protocol/Request.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/project2/server/DatabaseUtility.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/project2/server/DatabaseUtility.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/client/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/Client.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/common/command/Command.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/command/Command.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/protocol/Request.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/protocol/Request.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/server/DatabaseUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/DatabaseUtility.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

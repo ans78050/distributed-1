@@ -82,13 +82,13 @@ public class Client {
             System.out.println("or type 'logout' to logout.");
             System.out.print("Enter Command Number: ");
 
-            String s = scanner.nextLine();
-            if (s.equals("logout")) {
+            String tmpCmd = scanner.nextLine();
+            if (tmpCmd.equals("logout")) {
                 break;
             }
             int commandNumber;
             try {
-                commandNumber = Integer.parseInt(s);
+                commandNumber = Integer.parseInt(tmpCmd);
             } catch (NumberFormatException e) {
                 System.out.println("Unknown Command, Please select enter command number only!");
                 continue;

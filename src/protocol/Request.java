@@ -6,8 +6,8 @@ public class Request {
     private int port;
     private String message;
 
-    private int userId;
-    private String userType; // student, admin
+    private int userId = 0;
+    private String userType = "none"; // student, admin
 
     public Request(String host, int port, String message) {
         this.host = host;

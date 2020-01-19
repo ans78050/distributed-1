@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d61168e4-c65b-4464-b439-05eae6c42c0d" name="Default Changelist" comment="" />
+    <list default="true" id="d61168e4-c65b-4464-b439-05eae6c42c0d" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Ass1/common/model/Admin.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ass1/common/model/Admin.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Ass1/common/model/Student.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ass1/common/model/Student.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Ass1/server/DatabaseUtility.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Ass1/server/DatabaseUtility.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/model/Admin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/model/Admin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/model/Student.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/model/Student.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/server/DatabaseUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/server/DatabaseUtility.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +23,11 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1VLqwqkNs2VezsOU7JNOxAHBcfg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../untitled/src" />
     <property name="project.structure.last.edited" value="Modules" />

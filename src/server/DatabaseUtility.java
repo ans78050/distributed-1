@@ -2,10 +2,7 @@ package server;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import common.Log;
-import common.model.Assessment;
-import common.model.Grade;
-import common.model.Student;
-import common.model.Subject;
+import common.model.*;
 
 import java.io.FileNotFoundException;
 import java.sql.*;
@@ -128,11 +125,18 @@ public class DatabaseUtility {
 
     private String createUsersTableSQL() {
         return "CREATE TABLE users(" +
-                "id integer," +
+                "userId integer," +
                 "type varchar(8)," +
                 "username varchar(32)," +
                 "password varchar(32)," +
-                "PRIMARY KEY( `id`, `type`)" +
+                "PRIMARY KEY( `userId`, `type`)" +
+                ")";
+    }
+
+    private String createAdminsTableSQL() {
+        return "CREATE TABLE admins(" +
+                "admin_id integer PRIMARY KEY not null AUTO_INCREMENT," +
+                "adminName varchar(32)" +
                 ")";
     }
 
@@ -143,7 +147,8 @@ public class DatabaseUtility {
                 createGradeTableSQL(),
                 createSubjectTableSQL(),
                 createGradeAssessmentTableSQL(),
-                createUsersTableSQL()
+                createUsersTableSQL(),
+                createAdminsTableSQL()
         };
 
         for (String createTableStatement : createTableStatements) {
@@ -167,8 +172,12 @@ public class DatabaseUtility {
     }
 
     public void importDataSubject() {
-//        Subject subject  = new Subject();
-//        subject.saveSubject(this);
+        Subject subject  = new Subject();
+        subject.saveSubject(this);
+    }
+    public void importDataAdmin() throws SQLException {
+        Admin admin = new Admin();
+        admin.saveAdmin(this);
     }
 
 

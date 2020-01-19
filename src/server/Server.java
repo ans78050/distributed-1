@@ -26,6 +26,7 @@ public class Server {
             database.importDataStudent();
             database.importDataGrade();
             database.importDataSubject();
+            database.importDataAdmin();
             Log.i("Server importing data -> done!");
         }
 

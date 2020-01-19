@@ -17,7 +17,6 @@ import java.util.Map;
 public class Student implements Serializable, Tablable {
 
     public final static String TABLE_NAME = "students";
-    public final static String TABLE_NAME2 = "subjects";
 
 
     private int studentId;
@@ -26,14 +25,13 @@ public class Student implements Serializable, Tablable {
 
 
     public Student() {
-        this.studentId = this.studentId;
-        this.fullName = this.fullName;
-        this.yearLevel = this.yearLevel;
+        this.studentId = studentId;
+        this.fullName = fullName;
+        this.yearLevel = yearLevel;
     }
 
-    public Student(int id, int subject_id, String assessment_id, int grade_id) {
 
-    }
+
 
     public boolean saveStudent(DatabaseUtility db) {
         try {
@@ -147,24 +145,24 @@ public class Student implements Serializable, Tablable {
 //        return students;
 //    }
 
-    public static Student getById(DatabaseUtility db, int id) {
-        try {
-            PreparedStatement statement = db.getConnection().prepareStatement(
-                    "SELECT " + TABLE_NAME + ".*," + TABLE_NAME2 + ".* " +
-                            "FROM " + TABLE_NAME + "," + TABLE_NAME2 +
-                            " WHERE " + TABLE_NAME+".subjectName = " + TABLE_NAME2 + ".subject "+
-                            "AND subject_id = " +id+
-                            "ORDER BY subjectName ASC");
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            int studentId = resultSet.getInt("student_id");
-            String fullName = resultSet.getString("full_name");
-            int yearLevel = resultSet.getInt("year_level");
-            return new Student();
-        } catch (SQLException e) {
-            return null;
-        }
-    }
+//    public static Student getById(DatabaseUtility db, int id) {
+//        try {
+//            PreparedStatement statement = db.getConnection().prepareStatement(
+//                    "SELECT " + TABLE_NAME + ".*," + TABLE_NAME2 + ".* " +
+//                            "FROM " + TABLE_NAME + "," + TABLE_NAME2 +
+//                            " WHERE " + TABLE_NAME+".subjectName = " + TABLE_NAME2 + ".subject "+
+//                            "AND subject_id = " +id+
+//                            "ORDER BY subjectName ASC");
+//            ResultSet resultSet = statement.executeQuery();
+//            resultSet.next();
+//            int studentId = resultSet.getInt("student_id");
+//            String fullName = resultSet.getString("full_name");
+//            int yearLevel = resultSet.getInt("year_level");
+//            return new Student();
+//        } catch (SQLException e) {
+//            return null;
+//        }
+//    }
 
     @Override
     public String toString() {

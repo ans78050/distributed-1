@@ -16,77 +16,76 @@ public class Admin implements Serializable, Tablable {
     public final static String TABLE_NAME = "admins";
 
 
-    private int studentId;
-    private String name;
+    private int adminId;
+    private String adminName;
 
-    public Admin(int studentId, String name) {
-        this.studentId = studentId;
-        this.name = name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public String getName() {
-        return name;
+    public Admin() {
+        this.adminId = adminId;
+        this.adminName = adminName;
     }
 
 
-    public static Admin getById(DatabaseUtility db, int id) {
-        try {
-            PreparedStatement statement = db.getConnection().prepareStatement(
-                    "SELECT * " +
-                            "FROM" + TABLE_NAME + " " +
-                            "WHERE id = " + id);
-            ResultSet resultSet = statement.executeQuery();
-            resultSet.next();
-            int adminId = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            return new Admin(adminId, name);
-        } catch (SQLException e) {
-            return null;
-        }
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
     }
 
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+
+    public boolean saveAdmin(DatabaseUtility db) throws SQLException {
+
+                PreparedStatement insertStatement = db.getConnection().prepareStatement(
+                        "INSERT INTO " + TABLE_NAME + " (adminName)" +
+                                "VALUES (?)");
+                insertStatement.setString(1, "Rahul Dileep");
+                insertStatement.execute();
+                insertStatement.setString(1, "Wei Li");
+                insertStatement.execute();
+                insertStatement.setString(1, "Steve Smith");
+                insertStatement.execute();
+
+                return true;
+            }
 
     @Override
     public String serialize() {
         Map<String, Object> data = new HashMap<>();
-        data.put("student_id", studentId);
-        data.put("name", name);
+        data.put("admin_id", adminId);
+        data.put("adminName", adminName);
         return JsonHelper.toJson(data);
     }
 
     @Override
     public void deserialize(String serializer) {
         Map<String, Object> data = JsonHelper.flatten(serializer);
-        studentId = (int) data.get("student_id");
-        name = (String) data.get("name");
+        adminId = (int) data.get("admin_id");
+        adminName = (String) data.get("adminName");
     }
 
     @Override
     public String toString() {
-        return "Student{" +
-                "studentId=" + studentId +
-                ", fullName='" + name + '\'' +
+        return "Admin{" +
+                "adminId=" + adminId +
+                ", adminName='" + adminName + '\'' +
                 '}';
     }
 
 
     public static String[] getHeaders() {
-        return new String[]{"Id", "Student Name", "Year Level"};
+        return new String[]{"adminId", "Admin Name"};
     }
 
     @Override
     public String[] toTable() {
         return new String[]{
-                getStudentId() + "",
-                getName(),
+                getAdminId() + "",
+                getAdminName(),
         };
     }
 }

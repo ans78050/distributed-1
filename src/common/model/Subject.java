@@ -41,6 +41,10 @@ public class Subject implements Serializable, Tablable {
         this.dueDate = dueDate;
     }
 
+    public Subject() {
+
+    }
+
     public int getSubjectId() {
         return subjectId;
     }

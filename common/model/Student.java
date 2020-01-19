@@ -25,13 +25,13 @@ public class Student implements Serializable, Tablable {
 
 
     public Student() {
+    }
+
+    public Student(int studentId, String fullName, int yearLevel) {
         this.studentId = studentId;
         this.fullName = fullName;
         this.yearLevel = yearLevel;
     }
-
-
-
 
     public boolean saveStudent(DatabaseUtility db) {
         try {
@@ -83,7 +83,6 @@ public class Student implements Serializable, Tablable {
     }
 
 
-
     public int getStudentId() {
         return studentId;
     }
@@ -126,24 +125,23 @@ public class Student implements Serializable, Tablable {
     }
 
 
-
-//    public static List<Student> getAll(DatabaseUtility db) {
-//        List<Student> students = new ArrayList<>();
-//        try {
-//            PreparedStatement statement = db.getConnection().prepareStatement("SELECT * FROM " + TABLE_NAME);
-//            ResultSet resultSet = statement.executeQuery();
-//            while (resultSet.next()) {
-//                int studentId = resultSet.getInt("student_id");
-//                String fullName = resultSet.getString("full_name");
-//                int yearLevel = resultSet.getInt("year_level");
-//                Student student = new Student(studentId, fullName, yearLevel);
-//                students.add(student);
-//            }
-//        } catch (SQLException e) {
-//            return null;
-//        }
-//        return students;
-//    }
+    public static List<Student> getAll(DatabaseUtility db) {
+        List<Student> students = new ArrayList<>();
+        try {
+            PreparedStatement statement = db.getConnection().prepareStatement("SELECT * FROM " + TABLE_NAME);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int studentId = resultSet.getInt("student_id");
+                String fullName = resultSet.getString("full_name");
+                int yearLevel = resultSet.getInt("year_level");
+                Student student = new Student(studentId, fullName, yearLevel);
+                students.add(student);
+            }
+        } catch (SQLException e) {
+            return null;
+        }
+        return students;
+    }
 
 //    public static Student getById(DatabaseUtility db, int id) {
 //        try {

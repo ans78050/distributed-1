@@ -2,29 +2,54 @@ package client;
 
 import common.JsonHelper;
 import common.Log;
+import common.SampleRsa;
 import common.Tablable;
 import common.command.*;
 import common.display.Table;
 import common.model.*;
 import protocol.Request;
 import protocol.Response;
+import server.DatabaseUtility;
 import server.Server;
+import sun.security.rsa.RSAPrivateKeyImpl;
+import sun.security.rsa.RSAPublicKeyImpl;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.util.*;
 
 public class Client {
 
-    public Response request(Request request) throws IOException {
+    public Response request(Request request) throws IOException, InvalidKeyException {
         Socket socket = createSocket(request);                     //Socket Create
         DataInputStream input = new DataInputStream(socket.getInputStream());
         DataOutputStream output = new DataOutputStream(socket.getOutputStream());
 
-        output.writeUTF(request.getMessage());
-        String res = input.readUTF();
+        int pubKeyByteLength = input.readInt();
+        byte[] pubKeyByte = new byte[pubKeyByteLength];
+        input.read(pubKeyByte, 0, pubKeyByteLength);
+        PublicKey pubKey = new RSAPublicKeyImpl(pubKeyByte);
+
+//        byte[] msg = request.getMessage().getBytes();
+        byte[] msg = new byte[0];
+        try {
+            msg = SampleRsa.encrypt2(pubKey, request.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        output.writeUTF(request.getMessage());
+        output.writeInt(msg.length);
+        output.write(msg, 0, msg.length);
+        int resLength = input.readInt();
+//        String res = input.readUTF();
+        byte[] b = new byte[resLength];
+        input.read(b, 0, resLength);
+        String res = new String(b);
         socket.close();
 
         Log.i("Client receive res = " + res);
@@ -41,7 +66,7 @@ public class Client {
         return new Socket(request.getHost(), request.getPort());
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         Client client = new Client();
         Scanner scanner = new Scanner(System.in);
 
@@ -74,7 +99,7 @@ public class Client {
                     currentUser = new Users();
                     currentUser.deserialize(response.getBody());
 
-                } catch (IOException e) {
+                } catch (IOException | InvalidKeyException e) {
                     e.printStackTrace();
                 }
             }
@@ -118,9 +143,10 @@ public class Client {
                 Response response;
 
                 i = 1;
+                DatabaseUtility db = DatabaseUtility.connect();
                 for (Command c : Command.list()) {
                     if (i == commandNumber) {
-                        c.doInputUi();
+                        c.doInputUi(db);
                         command = c;
                         break;
                     }
@@ -161,7 +187,7 @@ public class Client {
                         System.out.println();
                     }
 
-                } catch (IOException e) {
+                } catch (IOException | InvalidKeyException e) {
                     e.printStackTrace();
                 }
             }

@@ -99,14 +99,15 @@ public class GetStudentGradeCommand extends Command {
     }
 
     @Override
-    public void doInputUi() {
+    public void doInputUi(DatabaseUtility db) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=======================================");
-        System.out.println("1. John Clarke");
-        System.out.println("2. Peter White");
-        System.out.println("3. Lily Li");
-        System.out.println("4. Lisa Soon");
-        System.out.println("5. Tom Dixon");
+        List<Student> students = Student.getAll(db);
+        int i = 1;
+        for (Student student : students) {
+            System.out.println(i + ". " + student.getFullName());
+            i++;
+        }
         System.out.println("=======================================");
         System.out.print("Enter Student Id: ");
         setStudentId(scanner.nextInt());

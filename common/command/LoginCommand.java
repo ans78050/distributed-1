@@ -63,7 +63,7 @@ public class LoginCommand extends Command {
     }
 
     @Override
-    public void doInputUi() {
+    public void doInputUi(DatabaseUtility db) {
 
     }
 }

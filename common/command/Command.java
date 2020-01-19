@@ -69,6 +69,6 @@ public abstract class Command {
 
     public abstract String getCommandStringUi();
 
-    public abstract void doInputUi();
+    public abstract void doInputUi(DatabaseUtility db);
 
 }

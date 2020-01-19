@@ -41,7 +41,7 @@ public class ListAssessmentDetailCommand extends Command {
     }
 
     @Override
-    public void doInputUi() {
+    public void doInputUi(DatabaseUtility db) {
 
     }
 }

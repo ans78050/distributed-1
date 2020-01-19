@@ -79,7 +79,7 @@ public class SetGradeCommand extends Command {
     }
 
     @Override
-    public void doInputUi() {
+    public void doInputUi(DatabaseUtility db) {
         Scanner scanner = new Scanner(System.in);
         System.out.println("=======================================");
         System.out.println("1. John Clarke");

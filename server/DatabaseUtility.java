@@ -27,7 +27,7 @@ public class DatabaseUtility {
         return connection;
     }
 
-    static DatabaseUtility connect() throws ClassNotFoundException {
+    public static DatabaseUtility connect() throws ClassNotFoundException {
 
         //check mysql driver exist.
         Class.forName("com.mysql.jdbc.Driver");

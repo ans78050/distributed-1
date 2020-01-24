@@ -38,17 +38,25 @@ public class Worker extends Thread {
             PublicKey pubKey = keyPair.getPublic();
             PrivateKey privateKey = keyPair.getPrivate();
 
+            // A: send public key to client
             byte[] pubKeyByte = pubKey.getEncoded();
+            // A1
             output.writeInt(pubKeyByte.length);
+            // A2
             output.write(pubKeyByte, 0, pubKeyByte.length);
 
+            // B: receive message from client
+            // B1
             int len = input.readInt();
             byte[] msg = new byte[len];
+            // B2
             input.read(msg, 0, len);
+
+            // Decrypt Message
             msg = SampleRsa.decrypt2(privateKey, msg);
             String s = new String(msg);
 
-            //String s = input.readUTF();
+            // Fetch Data from DB
             Log.i("Worker receive: " + s);
             String[] s2 = s.split("/");
             String[] s3 = s2[1].split(",");
@@ -64,8 +72,12 @@ public class Worker extends Thread {
                 Response response = command.exec(database);
                 resMsg = response.getStatus() + "\n" + response.getBody();
             }
+
+            // C: send result back to client
             byte[] b = resMsg.getBytes();
+            // C1
             output.writeInt(b.length);
+            // C2
             output.write(b, 0, b.length);
             clientSocket.close();
         } catch (Exception e) {

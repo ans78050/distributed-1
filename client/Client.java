@@ -33,24 +33,34 @@ public class Client {
         /////////////////////////////////////////////////////////////
         //Encrypt by using PubKey
         /////////////////////////////////////////////////////////////
+
+        // A: receive public key from server
+        // A1
         int pubKeyByteLength = input.readInt();
         byte[] pubKeyByte = new byte[pubKeyByteLength];
+        // A2
         input.read(pubKeyByte, 0, pubKeyByteLength);
         PublicKey pubKey = new RSAPublicKeyImpl(pubKeyByte);
 
-//        byte[] msg = request.getMessage().getBytes();
+        // Encrypt Message
         byte[] msg = new byte[0];
         try {
             msg = SampleRsa.encrypt2(pubKey, request.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        output.writeUTF(request.getMessage());
+
+        // B: send message to server
+        // B1
         output.writeInt(msg.length);
+        // B2
         output.write(msg, 0, msg.length);
+
+        // C: receive result from server
+        // C1
         int resLength = input.readInt();
-//        String res = input.readUTF();
         byte[] b = new byte[resLength];
+        // C2
         input.read(b, 0, resLength);
         String res = new String(b);
         socket.close();

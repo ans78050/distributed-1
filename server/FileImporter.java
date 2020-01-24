@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FileImporter {
+    public static final String DATA_PATH = "data/";
+
     ////////////////////////////////////////////////////////////////////////
     //Read data from file -> Assessment.csv
     ////////////////////////////////////////////////////////////////////////
     public List<Assessment> importAssessment(String filename) throws FileNotFoundException {
         List<Assessment> assessments = new ArrayList<>();
-        FileReader fileReader = new FileReader(filename);
+        FileReader fileReader = new FileReader(DATA_PATH + filename);
         Scanner scanner = new Scanner(fileReader);
 
         //skip first line
@@ -36,12 +38,13 @@ public class FileImporter {
         scanner.close();
         return assessments;
     }
+
     ////////////////////////////////////////////////////////////////////////
     //Read data from file -> Grade.csv
     ////////////////////////////////////////////////////////////////////////
     public List<Grade> importGrade(String filename) throws FileNotFoundException {
         List<Grade> grades = new ArrayList<>();
-        FileReader fileReader = new FileReader(filename);
+        FileReader fileReader = new FileReader(DATA_PATH + filename);
         Scanner scanner = new Scanner(fileReader);
         //skip first line
         String firstLine = scanner.nextLine();
@@ -59,12 +62,13 @@ public class FileImporter {
         scanner.close();
         return grades;
     }
+
     ////////////////////////////////////////////////////////////////////////
     //Read data from file -> Student.csv
     ////////////////////////////////////////////////////////////////////////
     public List<Student> importStudent(String filename) throws FileNotFoundException {
         List<Student> students = new ArrayList<>();
-        FileReader fileReader = new FileReader(filename);
+        FileReader fileReader = new FileReader(DATA_PATH + filename);
         Scanner scanner = new Scanner(fileReader);
         //skip first line
         String firstLine = scanner.nextLine();
@@ -81,12 +85,13 @@ public class FileImporter {
         scanner.close();
         return students;
     }
+
     ////////////////////////////////////////////////////////////////////////
     //Read data from file -> Subject.csv
     ////////////////////////////////////////////////////////////////////////
     public List<Subject> importSubject(String filename) throws FileNotFoundException {
         List<Subject> subjects = new ArrayList<>();
-        FileReader fileReader = new FileReader(filename);
+        FileReader fileReader = new FileReader(DATA_PATH + filename);
         Scanner scanner = new Scanner(fileReader);
         //skip first line
         String firstLine = scanner.nextLine();
@@ -102,12 +107,13 @@ public class FileImporter {
         scanner.close();
         return subjects;
     }
+
     ////////////////////////////////////////////////////////////////////////
     //Read data from file -> Admin.csv
     ////////////////////////////////////////////////////////////////////////
     public List<Admin> importAdmin(String filename) throws FileNotFoundException {
         List<Admin> admins = new ArrayList<>();
-        FileReader fileReader = new FileReader(filename);
+        FileReader fileReader = new FileReader(DATA_PATH + filename);
         Scanner scanner = new Scanner(fileReader);
         //skip first line
         String firstLine = scanner.nextLine();

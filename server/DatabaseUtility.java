@@ -82,7 +82,8 @@ public class DatabaseUtility {
                 "year_level integer" +
                 ")";
     }
-/////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////
     private String createAssessmentTableSQL() {
         return "CREATE TABLE assessments(" +
                 "assessment_id varchar(64)," +
@@ -94,6 +95,7 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `assessment_id`, `subject`)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     private String createSubjectTableSQL() {
         return "CREATE TABLE subjects(" +
@@ -101,6 +103,7 @@ public class DatabaseUtility {
                 "subjectName varchar(64)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     private String createGradeTableSQL() {
         return "CREATE TABLE grades(" +
@@ -110,6 +113,7 @@ public class DatabaseUtility {
                 "skill varchar(256)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     private String createGradeAssessmentTableSQL() {
         return "CREATE TABLE grade_assessment(" +
@@ -120,6 +124,7 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `assessment_id`, `subject_id`, `grade_id`, `student_id`)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     private String createUsersTableSQL() {
         return "CREATE TABLE users(" +
@@ -130,6 +135,7 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `userId`, `type`)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     private String createAdminsTableSQL() {
         return "CREATE TABLE admins(" +
@@ -137,6 +143,7 @@ public class DatabaseUtility {
                 "adminName varchar(32)" +
                 ")";
     }
+
     /////////////////////////////////////////////////////////////
     //command to create table in database
     private void createTables() throws SQLException {
@@ -184,48 +191,47 @@ public class DatabaseUtility {
     public void importDataFromFile() {
         FileImporter importer = new FileImporter();
         try {
-    /////////////////////////////////////////////////////////////
-    //import Assessment Class -> filename = COIT20257Ass2Data.csv
-    /////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////
+            //import Assessment Class -> filename = COIT20257Ass2Data.csv
+            /////////////////////////////////////////////////////////////
             List<Assessment> assessments = importer.importAssessment("COIT20257Ass2Data.csv");
             for (Assessment assessment : assessments) {
                 Log.i("saving assessment: " + assessment);
                 assessment.save(this);
             }
 
-    /////////////////////////////////////////////////////////////
-    //import Grade Class -> filename = Grade.csv
-    /////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////
+            //import Grade Class -> filename = Grade.csv
+            /////////////////////////////////////////////////////////////
             List<Grade> grades = importer.importGrade("Grade.csv");
             for (Grade grade : grades) {
                 Log.i("saving grade: " + grade);
                 grade.saveGrade(this);
             }
-     /////////////////////////////////////////////////////////////
-     //import Student Class -> filename = Student.csv
-     /////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////
+            //import Student Class -> filename = Student.csv
+            /////////////////////////////////////////////////////////////
             List<Student> students = importer.importStudent("Student.csv");
             for (Student student : students) {
                 Log.i("saving student: " + student);
                 student.saveStudent(this);
             }
-    /////////////////////////////////////////////////////////////
-    //import Subject Class -> filename = Subject.csv
-    /////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////
+            //import Subject Class -> filename = Subject.csv
+            /////////////////////////////////////////////////////////////
             List<Subject> subjects = importer.importSubject("Subject.csv");
             for (Subject subject : subjects) {
                 Log.i("saving subject: " + subject);
                 subject.saveSubject(this);
             }
-    /////////////////////////////////////////////////////////////
-    //import Subject Class -> filename = Subject.csv
-    /////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////////////
+            //import Subject Class -> filename = Subject.csv
+            /////////////////////////////////////////////////////////////
             List<Admin> admins = importer.importAdmin("Admin.csv");
             for (Admin admin : admins) {
                 Log.i("saving subject: " + admin);
                 admin.saveAdmin(this);
             }
-
 
 
         } catch (FileNotFoundException | SQLException e) {

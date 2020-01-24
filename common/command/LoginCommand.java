@@ -36,7 +36,8 @@ public class LoginCommand extends Command {
     @Override
     public Response exec(DatabaseUtility db) {
 
-        Users user = Users.getByUsernameAndPassword(db, userId, password);
+        int id = Integer.parseInt(userId);
+        Users user = Users.getByIdAndPassword(db, id, password);
         if (user == null) {
             return new Response(Response.STATUS_PAGE_NOT_FOUND, "User not exist!");
         }

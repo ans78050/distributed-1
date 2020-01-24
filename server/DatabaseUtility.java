@@ -128,7 +128,7 @@ public class DatabaseUtility {
     /////////////////////////////////////////////////////////////
     private String createUsersTableSQL() {
         return "CREATE TABLE users(" +
-                "userId integer," +
+                "userId integer AUTO_INCREMENT," +
                 "type varchar(8)," +
                 "username varchar(32)," +
                 "password varchar(32)," +

@@ -20,6 +20,7 @@ public abstract class Command {
                 new ListAssessmentDetailCommand(),
                 new SetGradeCommand(),
                 new LoginCommand(),
+                new RegisterCommand(),
                 new AddstudentCommand()
         };
     }

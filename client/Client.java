@@ -84,137 +84,162 @@ public class Client {
         Scanner scanner = new Scanner(System.in);
 
         Users currentUser = null;
+        boolean autoLoginAfterRegister = true;
 
+        while (true) {
 
-
-            while (true) {
-
-                while (currentUser == null) {
-                    System.out.println("System need Login, or leave blank to exit");
-                    System.out.print("userId: ");
-                    String userId = scanner.nextLine();
-                    if (userId.isEmpty()) {
-                        System.out.println("exit --> bye!");
-                        break;
-                    }
-
+            while (currentUser == null) {
+                System.out.println("System need Login, type 0 for register, or leave blank to exit");
+                System.out.print("userId: ");
+                String userId = scanner.nextLine();
+                if (userId.isEmpty()) {
+                    System.out.println("exit --> bye!");
+                    break;
+                } else if (userId.equals("0")) {
+                    System.out.print("type: ");
+                    String type = scanner.nextLine();
+                    System.out.print("username: ");
+                    String username = scanner.nextLine();
                     System.out.print("password: ");
                     String password = scanner.nextLine();
-
                     try {
-
-                        Command cmd = new LoginCommand(userId, password);
+                        Command cmd = new RegisterCommand(username, type, password);
                         Request request = new Request("localhost", Server.PORT, cmd.toCommandString(false));
                         Response response = client.request(request);
-                        if (response.getStatus() == Response.STATUS_PAGE_NOT_FOUND) {
-                            System.out.print("Username or Password is Incorrect!! please try again\n\n");
+
+                        if (response.getStatus() == Response.STATUS_SERVER_ERROR) {
+                            System.out.print(response.getBody() + "\n\n");
                             continue;
                         }
 
-                        currentUser = new Users();
-                        currentUser.deserialize(response.getBody());
-
+                        if (autoLoginAfterRegister) {
+                            currentUser = new Users();
+                            currentUser.deserialize(response.getBody());
+                        }
+                        continue;
                     } catch (IOException | InvalidKeyException e) {
                         e.printStackTrace();
                     }
                 }
 
-                if (currentUser == null) {
+                System.out.print("password: ");
+                String password = scanner.nextLine();
+
+                try {
+
+                    Command cmd = new LoginCommand(userId, password);
+                    Request request = new Request("localhost", Server.PORT, cmd.toCommandString(false));
+                    Response response = client.request(request);
+                    if (response.getStatus() == Response.STATUS_PAGE_NOT_FOUND) {
+                        System.out.print("Username or Password is Incorrect!! please try again\n\n");
+                        continue;
+                    }
+
+                    currentUser = new Users();
+                    currentUser.deserialize(response.getBody());
+
+                } catch (IOException | InvalidKeyException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            if (currentUser == null) {
+                break;
+            }
+
+            while (true) {
+                System.out.println("=======================================");
+                System.out.println(">>> " + currentUser.getUsername() + " (" + currentUser.getId() + "/" + currentUser.getType() + ")");
+                int i = 1;
+                for (Command c : Command.list()) {
+                    if (c.showInUi(currentUser)) {
+                        System.out.println(i + ". " + c.getCommandStringUi());
+                        i++;
+                    }
+                }
+                System.out.println("or type 'logout' to logout.");
+                System.out.print("Enter Command Number: ");
+
+                String tmpCmd = scanner.nextLine();
+                if (tmpCmd.equals("logout")) {
+                    currentUser = null;
                     break;
                 }
 
-                while (true) {
-                    System.out.println("=======================================");
-                    System.out.println(">>> " + currentUser.getUsername() + " (" + currentUser.getId() + "/" + currentUser.getType() + ")");
-                    int i = 1;
-                    for (Command c : Command.list()) {
-                        if (c.showInUi(currentUser)) {
-                            System.out.println(i + ". " + c.getCommandStringUi());
-                            i++;
-                        }
-                    }
-                    System.out.println("or type 'logout' to logout.");
-                    System.out.print("Enter Command Number: ");
+                int commandNumber;
+                try {
+                    commandNumber = Integer.parseInt(tmpCmd);
+                } catch (NumberFormatException e) {
+                    System.out.println("Unknown Command, Please select enter command number only!");
+                    continue;
+                }
+                if (commandNumber < 1 || commandNumber > Command.commandInUiCount()) {
+                    System.out.println("Unknown Command, Please try again!");
+                    continue;
+                }
 
-                    String tmpCmd = scanner.nextLine();
-                    if (tmpCmd.equals("logout")) {
-                        currentUser = null;
+                Command command = null;
+                Request request;
+                Response response;
+
+                i = 1;
+                DatabaseUtility db = DatabaseUtility.connect();
+                for (Command c : Command.list()) {
+                    if (i == commandNumber) {
+                        c.doInputUi(db);
+                        command = c;
                         break;
                     }
+                    if (c.showInUi(currentUser)) {
+                        i++;
+                    }
+                }
 
-                    int commandNumber;
-                        try {
-                            commandNumber = Integer.parseInt(tmpCmd);
-                        } catch (NumberFormatException e) {
-                            System.out.println("Unknown Command, Please select enter command number only!");
-                            continue;
-                        }
-                        if (commandNumber < 1 || commandNumber > Command.commandInUiCount()) {
-                            System.out.println("Unknown Command, Please try again!");
-                            continue;
-                        }
+                request = new Request("localhost", Server.PORT, command.toCommandString(false));
 
-                        Command command = null;
-                        Request request;
-                        Response response;
+                request.setUser(currentUser.getId(), currentUser.getType());
 
-                        i = 1;
-                        DatabaseUtility db = DatabaseUtility.connect();
-                        for (Command c : Command.list()) {
-                            if (i == commandNumber) {
-                                c.doInputUi(db);
-                                command = c;
+                try {
+                    Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());
+                    response = client.request(request);
+                    Log.i("status: " + response.getStatus());
+                    Log.i("body: " + response.getBody());
+
+                    if (response.getStatus() == Response.STATUS_OK) {
+                        switch (commandNumber) {
+                            case 1:
+                                handleListSubject(response);        ///////handle command assessment by subject
                                 break;
-                            }
-                            if (c.showInUi(currentUser)) {
-                                i++;
-                            }
-                    }
+                            case 2:
+                                handleStudentGradeAssessment(response);  //////handle command student grade by subject
+                                break;
 
-                    request = new Request("localhost", Server.PORT, command.toCommandString(false));
+                            case 3:
+                                handleListAssessmentDetail(response); ////handle show assessment table
+                                break;
 
-                    request.setUser(currentUser.getId(), currentUser.getType());
+                            case 5:
+                                handleAddStudent(response); ////handle show assessment table
+                                break;
 
-                    try {
-                        Log.i("Client request with: " + request.getMessage() + " to server " + request.getHost() + ":" + request.getPort());
-                        response = client.request(request);
-                        Log.i("status: " + response.getStatus());
-                        Log.i("body: " + response.getBody());
-
-                        if (response.getStatus() == Response.STATUS_OK) {
-                            switch (commandNumber) {
-                                case 1:
-                                    handleListSubject(response);        ///////handle command assessment by subject
-                                    break;
-                                case 2:
-                                    handleStudentGradeAssessment(response);  //////handle command student grade by subject
-                                    break;
-
-                                case 3:
-                                    handleListAssessmentDetail(response); ////handle show assessment table
-                                    break;
-
-                                case 5:
-                                    handleAddStudent(response); ////handle show assessment table
-                                    break;
-
-
-                            }
-                        } else {
-                            System.out.println("=======================================");
-                            System.out.println("Response: Failure!");
-                            System.out.println("Error Code: " + response.getStatus());
-                            System.out.println(response.getBody());
-                            System.out.println("=======================================");
-                            System.out.println();
+                            default:
+                                System.out.println(response.getBody());
                         }
-
-                    } catch (IOException | InvalidKeyException e) {
-                        e.printStackTrace();
+                    } else {
+                        System.out.println("=======================================");
+                        System.out.println("Response: Failure!");
+                        System.out.println("Error Code: " + response.getStatus());
+                        System.out.println(response.getBody());
+                        System.out.println("=======================================");
+                        System.out.println();
                     }
+
+                } catch (IOException | InvalidKeyException e) {
+                    e.printStackTrace();
                 }
             }
         }
+    }
 
 
     ////////////////////handle of command ///////////////////////////////////////////////////////////////////
@@ -303,6 +328,7 @@ public class Client {
         String[][] content = Tablable.of(assessment, headers.length);
         System.out.println(Table.of(headers, content));
     }
+
     ///////////command 5////////////////////
     private static void handleAddStudent(Response response) {
         List<Assessment> assessment = new ArrayList<>();
@@ -327,9 +353,6 @@ public class Client {
         String[][] content = Tablable.of(assessment, headers.length);
         System.out.println(Table.of(headers, content));
     }
-
-
-
 
 
 }

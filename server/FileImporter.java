@@ -122,7 +122,7 @@ public class FileImporter {
         while (scanner.hasNextLine()) {
             String[] s = scanner.nextLine().split(",");
             String adminName = s[0];
-            Admin admin = new Admin(adminName);
+            Admin admin = new Admin(-1, adminName);
             admins.add(admin);
         }
 

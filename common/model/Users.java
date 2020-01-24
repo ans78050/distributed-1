@@ -54,6 +54,31 @@ public class Users implements Serializable, Tablable {
         return password;
     }
 
+    public static Users getByIdAndPassword(DatabaseUtility db, int id, String password) {
+        try {
+            String query;
+            PreparedStatement statement = db.getConnection().prepareStatement(query =             //////////////TABLE_NAME = subjects
+                    "SELECT * " +                 //////////////TABLE_NAME2 = assessments
+                            "FROM " + TABLE_NAME + " " +
+                            "WHERE userId=" + id + " " +
+                            "AND password='" + password + "' "
+            );
+            Log.i("prepareStatement: " + statement);
+            Log.i("QUERY: " + query);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id2 = resultSet.getInt("userId");
+                String type = resultSet.getString("type");
+                String u = resultSet.getString("username");
+                String p = resultSet.getString("password");
+                return new Users(id2, type, u, p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Users getByUsernameAndPassword(DatabaseUtility db, String username, String password) {
         try {
             String query;
@@ -77,6 +102,56 @@ public class Users implements Serializable, Tablable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Users getByUsername(DatabaseUtility db, String username) {
+        try {
+            String query;
+            PreparedStatement statement = db.getConnection().prepareStatement(query =             //////////////TABLE_NAME = subjects
+                    "SELECT * " +                 //////////////TABLE_NAME2 = assessments
+                            "FROM " + TABLE_NAME + " " +
+                            "WHERE username='" + username + "' "
+            );
+            Log.i("prepareStatement: " + statement);
+            Log.i("QUERY: " + query);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int id = resultSet.getInt("userId");
+                String type = resultSet.getString("type");
+                String u = resultSet.getString("username");
+                String p = resultSet.getString("password");
+                return new Users(id, type, u, p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    public boolean save(DatabaseUtility db) throws SQLException {
+
+        if (id > 0) {
+            PreparedStatement insertStatement = db.getConnection().prepareStatement(
+                    "INSERT INTO " + TABLE_NAME + " (id, type, username, password) " +
+                            "VALUE (?,?,?,?) "
+            );
+            insertStatement.setInt(1, id);
+            insertStatement.setString(2, type);
+            insertStatement.setString(3, username);
+            insertStatement.setString(4, password);
+            insertStatement.execute();
+        } else {
+            PreparedStatement insertStatement = db.getConnection().prepareStatement(
+                    "INSERT INTO " + TABLE_NAME + " (type, username, password) " +
+                            "VALUE (?,?,?) "
+            );
+            insertStatement.setString(1, type);
+            insertStatement.setString(2, username);
+            insertStatement.setString(3, password);
+            insertStatement.execute();
+        }
+        return true;
     }
 
 

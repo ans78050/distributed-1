@@ -19,6 +19,7 @@ public class Grade implements Serializable, Tablable {
 
     public final static String TABLE_NAME = "grades";
 
+
     private String degree, knowledge, skill;
 
     public Grade(String degree, String knowledge, String skill) {
@@ -27,16 +28,14 @@ public class Grade implements Serializable, Tablable {
         this.skill = skill;
     }
 
-    public Grade(int grade_id, String degree, String knowledge, String skill) {
 
-    }
-
-    public Grade() {
-
-    }
 
     public String getDegree() {
         return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
     }
 
     public String getKnowledge() {
@@ -55,7 +54,6 @@ public class Grade implements Serializable, Tablable {
         this.skill = skill;
     }
 
-
     public static List<Grade> getAll(DatabaseUtility db) {
         List<Grade> grades = new ArrayList<>();
         try {
@@ -65,7 +63,7 @@ public class Grade implements Serializable, Tablable {
                 String degree = resultSet.getString("degree");
                 String knowledge = resultSet.getString("knowledge");
                 String skill = resultSet.getString("skill");
-                Grade grade = new Grade(degree, knowledge, skill);
+                Grade grade = new Grade( degree, knowledge, skill);
                 grades.add(grade);
             }
         } catch (SQLException e) {
@@ -75,36 +73,18 @@ public class Grade implements Serializable, Tablable {
     }
 
     public boolean saveGrade(DatabaseUtility db) throws SQLException {
-        PreparedStatement insertStatement = db.getConnection().prepareStatement(
-                "INSERT INTO " + TABLE_NAME + " (degree, knowledge, skill)" +
-                        "VALUES (?,?,?)");
-        try {
-        insertStatement.setString(1, "Very high");
-        insertStatement.setString(2, "thorough understanding");
-        insertStatement.setString(3, "uses a high level of skill in both familiar and new situations");
-        insertStatement.execute();
-        insertStatement.setString(1, "High");
-        insertStatement.setString(2, "clear understanding");
-        insertStatement.setString(3, "uses a high level of skill in familiar situations, and is beginning to use skills in new situations");
-        insertStatement.execute();
-        insertStatement.setString(1, "Sound");
-        insertStatement.setString(2, "understanding");
-        insertStatement.setString(3, "uses skills in situations familiar to them");
-        insertStatement.execute();
-        insertStatement.setString(1, "Developing");
-        insertStatement.setString(2, "understands aspects of");
-        insertStatement.setString(3, "uses varying levels of skill in situations familiar to them");
-        insertStatement.execute();
-        insertStatement.setString(1, "basic understanding");
-        insertStatement.setString(2, "thorough understanding");
-        insertStatement.setString(3, "beginning to use skills in familiar situations");
-        insertStatement.execute();
-            return true;
-        } catch (SQLException e) {
 
-            return false;
-        }
-    }
+                PreparedStatement insertStatement = db.getConnection().prepareStatement(
+                        "INSERT INTO " + TABLE_NAME + " (degree, knowledge, skill) " +
+                                "VALUE (?, ?, ?) "
+                );
+                insertStatement.setString(1, degree);
+                insertStatement.setString(2, knowledge);
+                insertStatement.setString(3, skill);
+                insertStatement.execute();
+                return true;
+            }
+
 
     @Override
     public String serialize() {
@@ -123,12 +103,13 @@ public class Grade implements Serializable, Tablable {
         skill = (String) data.get("skill");
     }
 
-    public static String[] getHeaders() {
-        return new String[]{
-                "Degree of achievement",
-                "Knowledge and understanding",
-                "Skill and use of skill"
-        };
+    @Override
+    public String toString() {
+        return "Student{" +
+                "degree='" + degree + '\'' +
+                ", knowledge=" + knowledge + '\'' +
+                ", skill=" + skill + '\'' +
+                '}';
     }
 
     @Override

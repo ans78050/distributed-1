@@ -101,6 +101,7 @@ public class GetStudentGradeCommand extends Command {
     @Override
     public void doInputUi(DatabaseUtility db) {
         Scanner scanner = new Scanner(System.in);
+        ////////student///////////
         System.out.println("=======================================");
         List<Student> students = Student.getAll(db);
         int i = 1;
@@ -112,12 +113,14 @@ public class GetStudentGradeCommand extends Command {
         System.out.print("Enter Student Id: ");
         setStudentId(scanner.nextInt());
         scanner.nextLine();
+        /////////subject///////////
         System.out.println("=======================================");
-        System.out.println("1. English");
-        System.out.println("2. Mathematics B");
-        System.out.println("3. Biology");
-        System.out.println("4. Business and Communication Technologies");
-        System.out.println("5. Religion and Ethics");
+        List<Subject> subjects = Subject.getAll(db);
+        int I = 1;
+        for (Subject subject : subjects){
+            System.out.println(I + ". " + subject.getSubjectName());
+            I++;
+        }
         System.out.println("=======================================");
         System.out.print("Enter Subject Id: ");
         setSubjectId(Integer.parseInt(scanner.nextLine()));

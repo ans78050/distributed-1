@@ -6,6 +6,7 @@ import common.model.Users;
 import protocol.Response;
 import server.DatabaseUtility;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,11 +14,13 @@ public abstract class Command {
 
     public static Command[] list() {
         return new Command[]{
-                new SetGradeCommand(),
+
                 new ListSubjectAssessment(),
                 new GetStudentGradeCommand(),
                 new ListAssessmentDetailCommand(),
-                new LoginCommand()
+                new SetGradeCommand(),
+                new LoginCommand(),
+                new AddstudentCommand()
         };
     }
 
@@ -38,7 +41,7 @@ public abstract class Command {
 
     public abstract String toCommandString(boolean startWith);
 
-    public abstract Response exec(DatabaseUtility db);
+    public abstract Response exec(DatabaseUtility db) throws SQLException;
 
     public abstract int authorizationLevel();
 

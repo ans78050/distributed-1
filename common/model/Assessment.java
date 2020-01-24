@@ -18,12 +18,12 @@ public class Assessment implements Serializable, Tablable {
 
     public final static String TABLE_NAME = "assessments";
 
-    private String assessmentId;
-    private String subject;
-    private String type;
-    private String topic;
-    private String format;
-    private String dueDate;
+    public  String assessmentId;
+    public  String subject;
+    public  String type;
+    public  String topic;
+    public  String format;
+    public  String dueDate;
 
     public Assessment(String assessmentId, String subject, String type, String topic, String format, String dueDate) {
         this.assessmentId = assessmentId;
@@ -99,7 +99,9 @@ public class Assessment implements Serializable, Tablable {
         }
         return assessments;
     }
-
+    ////////////////////////////////////////////////
+    //method use to save data from file to database
+    ////////////////////////////////////////////////
     public boolean save(DatabaseUtility db) {
         try {
             PreparedStatement statement = db.getConnection().prepareStatement(
@@ -110,6 +112,7 @@ public class Assessment implements Serializable, Tablable {
             statement.setString(2, subject);
             ResultSet resultSet = statement.executeQuery();
             Log.i(assessmentId + "," + subject + ", getFetchSize: " + resultSet.getFetchSize());
+
             if (resultSet.getFetchSize() > 0) {
                 PreparedStatement updateStatement = db.getConnection().prepareStatement(
                         "UPDATE " + TABLE_NAME + " " +
@@ -178,7 +181,14 @@ public class Assessment implements Serializable, Tablable {
     }
 
     public static String[] getHeaders() {
-        return new String[]{"Id", "Subject", "Type", "Topic", "Format", "Due Date"};
+        return new String[]{
+                "Id",
+                "Subject",
+                "Type",
+                "Topic",
+                "Format",
+                "Due Date"
+        };
     }
 
     @Override

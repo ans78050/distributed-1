@@ -1,30 +1,27 @@
 package common.command;
 
-import common.model.Assessment;
 import common.model.Users;
 import protocol.Response;
 import server.DatabaseUtility;
 
-import java.util.List;
-
 public class LoginCommand extends Command {
 
-    private String username;
+    private String userId;
     private String password;
 
     public LoginCommand() {
 
     }
 
-    public LoginCommand(String username, String password) {
-        this.username = username;
+    public LoginCommand(String userId, String password) {
+        this.userId = userId;
         this.password = password;
     }
 
     @Override
     public void setCommandString(String command) {
         String[] s = command.split(":");
-        username = s[1];      ///1st input
+        userId = s[1];      ///1st input
         password = s[2];     ///2nd input
     }
 
@@ -33,13 +30,13 @@ public class LoginCommand extends Command {
         if (startWith)
             return "Login:";
         else
-            return "Login:" + username + ":" + password;
+            return "Login:" + userId + ":" + password;
     }
 
     @Override
     public Response exec(DatabaseUtility db) {
 
-        Users user = Users.getByUsernameAndPassword(db, username, password);
+        Users user = Users.getByUsernameAndPassword(db, userId, password);
         if (user == null) {
             return new Response(Response.STATUS_PAGE_NOT_FOUND, "User not exist!");
         }

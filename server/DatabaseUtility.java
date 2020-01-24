@@ -1,6 +1,5 @@
 package server;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException;
 import common.Log;
 import common.model.*;
 
@@ -83,8 +82,7 @@ public class DatabaseUtility {
                 "year_level integer" +
                 ")";
     }
-
-
+/////////////////////////////////////////////////////////////
     private String createAssessmentTableSQL() {
         return "CREATE TABLE assessments(" +
                 "assessment_id varchar(64)," +
@@ -96,14 +94,14 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `assessment_id`, `subject`)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
     private String createSubjectTableSQL() {
         return "CREATE TABLE subjects(" +
                 "subject_id integer PRIMARY KEY not null AUTO_INCREMENT," +
                 "subjectName varchar(64)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
     private String createGradeTableSQL() {
         return "CREATE TABLE grades(" +
                 "grade_id integer PRIMARY KEY not null AUTO_INCREMENT," +
@@ -112,7 +110,7 @@ public class DatabaseUtility {
                 "skill varchar(256)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
     private String createGradeAssessmentTableSQL() {
         return "CREATE TABLE grade_assessment(" +
                 "student_id integer," +
@@ -122,7 +120,7 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `assessment_id`, `subject_id`, `grade_id`, `student_id`)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
     private String createUsersTableSQL() {
         return "CREATE TABLE users(" +
                 "userId integer," +
@@ -132,14 +130,15 @@ public class DatabaseUtility {
                 "PRIMARY KEY( `userId`, `type`)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
     private String createAdminsTableSQL() {
         return "CREATE TABLE admins(" +
                 "admin_id integer PRIMARY KEY not null AUTO_INCREMENT," +
                 "adminName varchar(32)" +
                 ")";
     }
-
+    /////////////////////////////////////////////////////////////
+    //command to create table in database
     private void createTables() throws SQLException {
         String[] createTableStatements = {
                 createStudentsTableSQL(),
@@ -150,49 +149,86 @@ public class DatabaseUtility {
                 createUsersTableSQL(),
                 createAdminsTableSQL()
         };
-
+        /////////////////////////////////////////////////////////////
+        //check Table exist or not if not yet create execute above command
         for (String createTableStatement : createTableStatements) {
             Statement statement = connection.createStatement();
             try {
                 statement.execute(createTableStatement);
-            } catch (MySQLSyntaxErrorException ignored) {
+            } catch (Exception ignored) {
                 Log.i("Table already exist - " + createTableStatement);
             }
         }
     }
+    /////////////////////////////////////////////////////////////
+    //import data Section -> I have change from SQL coding to fill data in table to read from file by scanner method
+    /////////////////////////////////////////////////////////////
+//    public void importDataStudent() {
+//        Student student = new Student();
+//        student.saveStudent(this);
+//    }
 
-    public void importDataStudent() {
-        Student student = new Student();
-        student.saveStudent(this);
-    }
+//    public void importDataGrade() throws SQLException {
+//        Grade grade = new Grade();
+//        grade.saveGrade(this);
+//    }
 
-    public void importDataGrade() throws SQLException {
-        Grade grade = new Grade();
-        grade.saveGrade(this);
-    }
+//    public void importDataAdmin() throws SQLException {
+//        Admin admin = new Admin();
+//        admin.saveAdmin(this);
+//    }
 
-    public void importDataSubject() {
-        Subject subject  = new Subject();
-        subject.saveSubject(this);
-    }
-    public void importDataAdmin() throws SQLException {
-        Admin admin = new Admin();
-        admin.saveAdmin(this);
-    }
-
-
-    public void importDataFromFile() {                //import data from file
+    /////////////////////////////////////////////////////////////
+    //import data From FileImporter Class
+    /////////////////////////////////////////////////////////////
+    public void importDataFromFile() {
         FileImporter importer = new FileImporter();
         try {
-
+    /////////////////////////////////////////////////////////////
+    //import Assessment Class -> filename = COIT20257Ass2Data.csv
+    /////////////////////////////////////////////////////////////
             List<Assessment> assessments = importer.importAssessment("COIT20257Ass2Data.csv");
             for (Assessment assessment : assessments) {
                 Log.i("saving assessment: " + assessment);
                 assessment.save(this);
             }
 
+    /////////////////////////////////////////////////////////////
+    //import Grade Class -> filename = Grade.csv
+    /////////////////////////////////////////////////////////////
+            List<Grade> grades = importer.importGrade("Grade.csv");
+            for (Grade grade : grades) {
+                Log.i("saving grade: " + grade);
+                grade.saveGrade(this);
+            }
+     /////////////////////////////////////////////////////////////
+     //import Student Class -> filename = Student.csv
+     /////////////////////////////////////////////////////////////
+            List<Student> students = importer.importStudent("Student.csv");
+            for (Student student : students) {
+                Log.i("saving student: " + student);
+                student.saveStudent(this);
+            }
+    /////////////////////////////////////////////////////////////
+    //import Subject Class -> filename = Subject.csv
+    /////////////////////////////////////////////////////////////
+            List<Subject> subjects = importer.importSubject("Subject.csv");
+            for (Subject subject : subjects) {
+                Log.i("saving subject: " + subject);
+                subject.saveSubject(this);
+            }
+    /////////////////////////////////////////////////////////////
+    //import Subject Class -> filename = Subject.csv
+    /////////////////////////////////////////////////////////////
+            List<Admin> admins = importer.importAdmin("Admin.csv");
+            for (Admin admin : admins) {
+                Log.i("saving subject: " + admin);
+                admin.saveAdmin(this);
+            }
 
-        } catch (FileNotFoundException e) {
+
+
+        } catch (FileNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }

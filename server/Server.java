@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 public class Server {
 
-    private static final boolean DO_IMPORT_DATA_FROM_FILE = false;
+    private static final boolean DO_IMPORT_DATA_FROM_FILE = true;
 
     public final static int PORT = 8080;
 
@@ -23,10 +23,10 @@ public class Server {
         if(DO_IMPORT_DATA_FROM_FILE){                                   //Import Data
             Log.i("Server importing data -> start!");
             database.importDataFromFile();
-            database.importDataStudent();
-            database.importDataGrade();
-            database.importDataSubject();
-            database.importDataAdmin();
+//            database.importDataStudent();
+//            database.importDataGrade();
+//            database.importDataSubject();
+//            database.importDataAdmin();
             Log.i("Server importing data -> done!");
         }
 

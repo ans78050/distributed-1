@@ -1,9 +1,13 @@
 package common.command;
 
+import common.model.Grade;
 import common.model.GradeAssessment;
+import common.model.Student;
+import common.model.Subject;
 import protocol.Response;
 import server.DatabaseUtility;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class SetGradeCommand extends Command {
@@ -81,22 +85,26 @@ public class SetGradeCommand extends Command {
     @Override
     public void doInputUi(DatabaseUtility db) {
         Scanner scanner = new Scanner(System.in);
+        //////////show List of Student from database
         System.out.println("=======================================");
-        System.out.println("1. John Clarke");
-        System.out.println("2. Peter White");
-        System.out.println("3. Lily Li");
-        System.out.println("4. Lisa Soon");
-        System.out.println("5. Tom Dixon");
+        List<Student> students = Student.getAll(db);
+        int i = 1;
+        for (Student student : students) {
+            System.out.println(i + ". " + student.getFullName());
+            i++;
+        }
         System.out.println("=======================================");
         System.out.print("Enter Student Id: ");
         setStudentId(scanner.nextInt());
         scanner.nextLine();
+        //////////show List of Subject from database
         System.out.println("=======================================");
-        System.out.println("1. English");
-        System.out.println("2. Mathematics B");
-        System.out.println("3. Biology");
-        System.out.println("4. Business and Communication Technologies");
-        System.out.println("5. Religion and Ethics");
+        List<Subject> subjects = Subject.getAll(db);
+        int I = 1;
+        for (Subject subject : subjects){
+            System.out.println(I + ". " + subject.getSubjectName());
+            I++;
+        }
         System.out.println("=======================================");
         System.out.print("Enter Subject Id: ");
         setSubjectId(scanner.nextInt());
@@ -104,12 +112,14 @@ public class SetGradeCommand extends Command {
         System.out.print("Enter Assessment Id(eg 11.1): ");
         setAssessmentId(scanner.next());
         scanner.nextLine();
+        //////////show List of Grade from database
         System.out.println("=======================================");
-        System.out.println("1. Very high");
-        System.out.println("2. High");
-        System.out.println("3. Sound");
-        System.out.println("4. Developing");
-        System.out.println("5. Basic understanding");
+        List<Grade> grades = Grade.getAll(db);
+        int ii = 1;
+        for (Grade grade : grades) {
+            System.out.println(ii + ". " + grade.getDegree());
+            ii++;
+        }
         System.out.println("=======================================");
         System.out.print("Enter Grade Id: ");
         setGradeId(scanner.nextInt());

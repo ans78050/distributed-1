@@ -67,7 +67,7 @@ public class Users implements Serializable, Tablable {
             Log.i("QUERY: " + query);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int id = resultSet.getInt("userId");
                 String type = resultSet.getString("type");
                 String u = resultSet.getString("username");
                 String p = resultSet.getString("password");
